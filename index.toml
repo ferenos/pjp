@@ -1,0 +1,161 @@
+hash-format = "sha256"
+
+[[files]]
+file = "mods/ad-astra.pw.toml"
+hash = "da42d2a6e6e3f7bd10df625ab23d6ba8a50ecb3545c1c3c6bda4f826caa5d51b"
+metafile = true
+
+[[files]]
+file = "mods/applied-energistics-2.pw.toml"
+hash = "0f4c2198603cd84a14dc6741729d0b0dcf509574776e620c36c3e7180082db32"
+metafile = true
+
+[[files]]
+file = "mods/athena.pw.toml"
+hash = "9638d8a308563842fd989970919a51f37ed1bcc82372bff47fc5a5c2e6de738e"
+metafile = true
+
+[[files]]
+file = "mods/bellsandwhistles.pw.toml"
+hash = "585a3071c68587c3c041832210a58e74e7701162dbc360d47956655ca1a6438e"
+metafile = true
+
+[[files]]
+file = "mods/blockui.pw.toml"
+hash = "a8f0762eb0b57696a445cc9f9b8968de9492de538595e27d756bd7fe39ca1a9f"
+metafile = true
+
+[[files]]
+file = "mods/botarium.pw.toml"
+hash = "008c942efc2e2ec221dd1a760b4a50e2f24ede37747731ba794f5e845554adcb"
+metafile = true
+
+[[files]]
+file = "mods/chipped.pw.toml"
+hash = "71a33fe41bead909b3e95643351ef8015def70d3cb083916469f492f66434b45"
+metafile = true
+
+[[files]]
+file = "mods/create-big-cannons.pw.toml"
+hash = "a92288574aeb3b2387d8c423b980321efa0f486074d6167aa30195a09d930369"
+metafile = true
+
+[[files]]
+file = "mods/create.pw.toml"
+hash = "9d7971a7af2ff4a96a0e5aede76f9cf8dc978da601e2754f79d6ec8631125bb9"
+metafile = true
+
+[[files]]
+file = "mods/domum-ornamentum.pw.toml"
+hash = "633b13c5912472982f53776c205117edbbf4b13b4de1975c37c42b6cf79624cf"
+metafile = true
+
+[[files]]
+file = "mods/farmers-delight.pw.toml"
+hash = "067fc433511066d18b1795b86c9856246a8da7f9a4316afd6b25e5eee181f660"
+metafile = true
+
+[[files]]
+file = "mods/fusion-connected-textures.pw.toml"
+hash = "e17f96677912ca1e42ab05ba1e959226c7b5244f6a24eb573ace63f57e6c222f"
+metafile = true
+
+[[files]]
+file = "mods/guideme.pw.toml"
+hash = "5cc92eb0e58c2afbfd625d727d80da1d1c84500ec962bb22f5be28b864f18551"
+metafile = true
+
+[[files]]
+file = "mods/hypertubes.pw.toml"
+hash = "7c62eec6689e4b771b835e8fe732dd924ff1a560818bf35e11f6d13b4b479878"
+metafile = true
+
+[[files]]
+file = "mods/interiors.pw.toml"
+hash = "588e222f5cf824fb8317bd3800752c8a4a86f3c707f70b35420f8c9a9599fe43"
+metafile = true
+
+[[files]]
+file = "mods/jei.pw.toml"
+hash = "94a0ed0630ad6e53af1e317e86a195672f4627552fde677396ac94eefce6ffc6"
+metafile = true
+
+[[files]]
+file = "mods/mekanism.pw.toml"
+hash = "7c411a566d022680769ddb8323984fff292ddeb35e7d8fcfe2cc41b9885d9557"
+metafile = true
+
+[[files]]
+file = "mods/minecolonies.pw.toml"
+hash = "2d9cb51b1fe897e0bb6f5c3a4edfc7ba00dead8863eea82f8ed0df662edf707c"
+metafile = true
+
+[[files]]
+file = "mods/minecraft-transit-railway.pw.toml"
+hash = "d0b32b8fdb97c761798d38026e075ed801430871e48b5dcd05e11531e5ee98bc"
+metafile = true
+
+[[files]]
+file = "mods/multi-piston.pw.toml"
+hash = "9895bf13e14fbb0b5284f7ad800b1fb3c7d4c373306231d5c6f95a282079fcbe"
+metafile = true
+
+[[files]]
+file = "mods/rechiseled-chipped.pw.toml"
+hash = "6404fb65e80b83afe92bad0d4562253d2b7f821114e5574fcf7eb58e08b6da66"
+metafile = true
+
+[[files]]
+file = "mods/rechiseled.pw.toml"
+hash = "3e8c59c1817babb68d49af1bd816d6d00ffbaa8343968ad324996a0d5deb9c69"
+metafile = true
+
+[[files]]
+file = "mods/resourceful-config.pw.toml"
+hash = "e242387207a2538b5ccb55697174c65e549e1eb2fef9da37e1ad3734e0372b65"
+metafile = true
+
+[[files]]
+file = "mods/resourceful-lib.pw.toml"
+hash = "ef0264b7d819848f72ab2f34643306187e712965a8246e1f733e1bd39d8fd681"
+metafile = true
+
+[[files]]
+file = "mods/ritchies-projectile-library.pw.toml"
+hash = "8206df6c97f3b0696ca143240084eea614dc1f404ab917dde9c5f156cebafa02"
+metafile = true
+
+[[files]]
+file = "mods/selene.pw.toml"
+hash = "086ae6b5cfa8a07be194343117c92c8139275a8dac28d4c3476081a0eb1d3386"
+metafile = true
+
+[[files]]
+file = "mods/station-decoration.pw.toml"
+hash = "5d6a0196e8af4554661ce0d7009e31fa4bdd5cbef7cca79b27c6f48b911380cd"
+metafile = true
+
+[[files]]
+file = "mods/structurize.pw.toml"
+hash = "c142309a161b3b50bbbb7bc0f1211a8461016c8681f94eb82a2b074cb3fba3db"
+metafile = true
+
+[[files]]
+file = "mods/supermartijn642s-config-lib.pw.toml"
+hash = "3eede8a7ebafb69840153ff51dbc879b0232799e90a834ab6d71274b1316179f"
+metafile = true
+
+[[files]]
+file = "mods/supermartijn642s-core-lib.pw.toml"
+hash = "4ddff1daf862f7e481a6c30c4cbb4bb32165f2c73cefc908dbf62b18f0d46a56"
+metafile = true
+
+[[files]]
+file = "mods/supplementaries.pw.toml"
+hash = "31883f2697767614c5b0671e9600c4e584c8e60be8062867667ddfc9d2624e23"
+metafile = true
+
+[[files]]
+file = "mods/towntalk.pw.toml"
+hash = "32e0f6bce7adc5b09ba3350110ac4be7ee04e556db35ba1db97bacfabd31e4dc"
+metafile = true
