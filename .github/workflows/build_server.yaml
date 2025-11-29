@@ -47,11 +47,12 @@ jobs:
             java -jar forge-${MC_VERSION}-${FORGE_VERSION}-installer.jar --installServer
             # Accept EULA
             echo "eula=true" > eula.txt
-            echo "Debugging, echo directory listing:"
-            ls -la
 
       - name: Create server directory structure
         run: |
+          # List Current structure for debugging
+          ls -la
+
           mkdir -p server-pack
           
           cp -r mods server-pack/
