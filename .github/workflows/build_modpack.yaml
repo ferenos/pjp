@@ -15,17 +15,40 @@ env:
   SERVER_STARTUP_TIMEOUT: "120"
 
 jobs:
-  build-server:
+  version-check:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    outputs:
-      version: ${{ steps.get_version.outputs.VERSION }}
-    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      
+
+      - name: Ensure Pack.toml version has bumped
+        run: |
+          git fetch --tags
+          LATEST_TAG=$(git describe --tags $(git rev-list --tags --max-count=1))
+          if [ -z "$LATEST_TAG" ]; then
+            echo "No previous tags found, skipping version check."
+            exit 0
+          fi
+          
+          LATEST_VERSION=${LATEST_TAG#v}
+          CURRENT_VERSION=$(grep '^version = ' pack.toml | sed 's/version = "\(.*\)"/\1/')
+          
+          echo "Latest tagged version: $LATEST_VERSION"
+          echo "Current pack.toml version: $CURRENT_VERSION"
+          
+          if [ "$CURRENT_VERSION" == "$LATEST_VERSION" ]; then
+            echo "Error: pack.toml version has not been bumped since the last release."
+            exit 1
+          else
+            echo "Version check passed: pack.toml version has been updated."
+          fi
+
+  pre-reqs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Set up Java 17
         uses: actions/setup-java@v4
         with:
@@ -40,7 +63,20 @@ jobs:
       - name: Install Packwiz
         run: |
           go install github.com/packwiz/packwiz@latest
+
+      - name: Initialize Packwiz Pack
+        run: |
+          packwiz init --mcversion ${MC_VERSION} --loader forge
+
       
+  build-server:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      version: ${{ steps.get_version.outputs.VERSION }}
+    
+    steps:      
       - name: Download all mods
         run: |
           packwiz refresh
@@ -324,24 +360,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      
-      - name: Set up Java 17
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-
-      - name: Install GO
-        uses: actions/setup-go@v4
-        with:
-          go-version: '1.25'
-      
-      - name: Install Packwiz
-        run: |
-          go install github.com/packwiz/packwiz@latest
-
       - name: Copy from Manual to Packwiz Cache
         run: |
           mkdir -p /home/runner/.cache/packwiz/cache/import
@@ -365,11 +383,6 @@ jobs:
       contents: write
     
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      
       - name: Download server artifacts
         uses: actions/download-artifact@v4
         with:
@@ -479,7 +492,7 @@ jobs:
           
           #### Client (Prism Launcher)
           1. Download `NutAndJamPack-*.mrpack`
-          2. Open Prism Launcher
+          2. Open Modrinth Launcher
           3. Click "Add Instance" → "Import from zip"
           4. Select the downloaded `.mrpack` file
           
