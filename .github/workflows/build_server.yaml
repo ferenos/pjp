@@ -46,7 +46,10 @@ jobs:
           mkdir -p server-pack
           
           cp -r mods server-pack/
-          cp -r config server-pack/
+
+          if [ -d "config" ]; then
+            cp -r config server-pack/
+          fi
           
           if [ -d "kubejs" ]; then
             cp -r kubejs server-pack/
