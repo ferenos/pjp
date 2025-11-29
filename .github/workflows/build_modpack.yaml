@@ -363,27 +363,144 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    
     steps:
-      - name: Download artifacts
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Download server artifacts
         uses: actions/download-artifact@v4
         with:
           name: server-pack-${{ needs.build-server.outputs.version }}
-          path: ./artifacts
-
+          path: ./artifacts/server
+      
       - name: Download client artifacts
         uses: actions/download-artifact@v4
         with:
           name: NutAndJamPack-1.0.0.mrpack
-          path: ./artifacts
-
-      - name: Create Release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: |
-            ./artifacts/**
-          body: |
-            ## Release Notes
-            
-            Auto-generated release from artifacts
-          draft: false
-          prerelease: false
+          path: ./artifacts/client
+      
+      - name: Prepare release files
+        run: |
+          # List downloaded files for debugging
+          echo "Server artifacts:"
+          ls -lah ./artifacts/server/
+          echo "Client artifacts:"
+          ls -lah ./artifacts/client/
+          
+          # Move files to root for easier upload
+          mkdir -p ./release-files
+          find ./artifacts -type f -exec mv {} ./release-files/ \;
+          
+          echo "Release files:"
+          ls -lah ./release-files/
+      
+      - name: Generate changelog
+        id: changelog
+        run: |
+          # Get commits since last tag
+          PREV_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          
+          if [ -n "$PREV_TAG" ]; then
+            CHANGELOG=$(git log ${PREV_TAG}..HEAD --pretty=format:"- %s (%h)" --no-merges)
+          else
+            CHANGELOG=$(git log --pretty=format:"- %s (%h)" --no-merges -n 10)
+          fi
+          
+          # If no commits, use default message
+          if [ -z "$CHANGELOG" ]; then
+            CHANGELOG="- Initial release"
+          fi
+          
+          # Save to file for multi-line support
+          echo "$CHANGELOG" > changelog.txt
+          
+          echo "Generated changelog:"
+          cat changelog.txt
+      
+      - name: Get version
+        id: version
+        run: |
+          # Get version from pack.toml
+          VERSION=$(grep '^version = ' pack.toml | sed 's/version = "\(.*\)"/\1/' || echo "1.0.0")
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          echo "Using version: $VERSION"
+      
+      - name: Create and push tag
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          TAG="v${{ steps.version.outputs.VERSION }}"
+          
+          # Check if tag already exists
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "Tag $TAG already exists, deleting it"
+            git tag -d "$TAG"
+            git push origin ":refs/tags/$TAG" || true
+          fi
+          
+          # Create new tag
+          git tag -a "$TAG" -m "Release $TAG"
+          git push origin "$TAG"
+          
+          echo "Created and pushed tag: $TAG"
+      
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="v${{ steps.version.outputs.VERSION }}"
+          
+          # Create release notes
+          cat > release-notes.md << 'EOF'
+          ## Modpack ${{ steps.version.outputs.VERSION }}
+          
+          ### Downloads
+          - **Server Pack**: `server-pack-*.zip` - For dedicated servers
+          - **Client Pack**: `NutAndJamPack-*.mrpack` - For Prism Launcher / Modrinth App
+          
+          ### Changes
+          EOF
+          
+          cat changelog.txt >> release-notes.md
+          
+          cat >> release-notes.md << 'EOF'
+          
+          ### Requirements
+          - **Minecraft**: 1.20.1
+          - **Forge**: 47.4.12
+          - **Java**: 17 or higher
+          - **RAM**: 4GB minimum (8GB recommended)
+          
+          ### Installation
+          
+          #### Client (Prism Launcher)
+          1. Download `NutAndJamPack-*.mrpack`
+          2. Open Prism Launcher
+          3. Click "Add Instance" → "Import from zip"
+          4. Select the downloaded `.mrpack` file
+          
+          #### Server
+          1. Download `server-pack-*.zip`
+          2. Extract to your server directory
+          3. Run `start-server.sh` (Linux) or `start-server.bat` (Windows)
+          4. Accept EULA by editing `eula.txt`
+          5. Configure `server.properties`
+          6. Restart server
+          
+          ### Report Issues
+          Found a bug? [Open an issue](https://github.com/${{ github.repository }}/issues)
+          EOF
+          
+          echo "Release notes:"
+          cat release-notes.md
+          
+          # Create release with all files in release-files directory
+          gh release create "$TAG" \
+            ./release-files/* \
+            --title "NutAndJam Modpack ${{ steps.version.outputs.VERSION }}" \
+            --notes-file release-notes.md \
+            --latest
