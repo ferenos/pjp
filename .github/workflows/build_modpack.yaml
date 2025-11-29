@@ -344,13 +344,13 @@ jobs:
     
       - name: Create Modrinth Export
         run: |
-          packwiz modrinth export --output-file=pjpack.mrpack --include-optional
+          packwiz modrinth export
 
       - name: Upload Modrinth Pack
         uses: actions/upload-artifact@v4
         with:
-          name: pjpack.mrpack-${{ needs.build-server.outputs.version }}
-          path: pjpack.mrpack-*.mrpack
+          name: NutAndJamPack-1.0.0.mrpack
+          path: NutAndJamPack-1.0.0.mrpack
           retention-days: 5
 
   release:
@@ -368,7 +368,8 @@ jobs:
       - name: Download client artifacts
         uses: actions/download-artifact@v4
         with:
-          name: pjpack.mrpack-${{ needs.build-server.outputs.version }}
+          name: NutAndJamPack-1.0.0.mrpack
+          path: ./artifacts
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
