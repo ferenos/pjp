@@ -344,6 +344,7 @@ jobs:
 
       - name: Copy from Manual to Packwiz Cache
         run: |
+          mkdir -p /home/runner/.cache/packwiz/cache/import
           cp -r manual_mods/* /home/runner/.cache/packwiz/cache/import
     
       - name: Create Modrinth Export
