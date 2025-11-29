@@ -1,0 +1,302 @@
+name: Build Server Pack
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:  # Allows manual trigger
+
+jobs:
+  build-server:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      
+      - name: Install Packwiz
+        run: |
+          wget https://github.com/packwiz/packwiz/releases/download/v0.20.14/packwiz-installer-bootstrap.jar -O packwiz-installer-bootstrap.jar
+          wget https://github.com/packwiz/packwiz/releases/latest/download/packwiz-linux-amd64.tar.gz
+          tar -xzf packwiz-linux-amd64.tar.gz
+          chmod +x packwiz
+          sudo mv packwiz /usr/local/bin/
+      
+      - name: Download all mods
+        run: |
+          packwiz refresh
+      
+      - name: Download Forge server
+        run: |
+          FORGE_VERSION="1.20.1-47.4.12"
+          wget https://maven.minecraftforge.net/net/minecraftforge/forge/${FORGE_VERSION}/forge-${FORGE_VERSION}-installer.jar
+          java -jar forge-${FORGE_VERSION}-installer.jar --installServer
+          rm forge-${FORGE_VERSION}-installer.jar
+          rm forge-${FORGE_VERSION}-installer.jar.log
+      
+      - name: Create server directory structure
+        run: |
+          mkdir -p server-pack
+          
+          cp -r mods server-pack/
+          cp -r config server-pack/
+          
+          if [ -d "kubejs" ]; then
+            cp -r kubejs server-pack/
+          fi
+          
+          if [ -d "defaultconfigs" ]; then
+            cp -r defaultconfigs server-pack/
+          fi
+          
+          cp run.sh server-pack/ 2>/dev/null || true
+          cp run.bat server-pack/ 2>/dev/null || true
+          cp -r libraries server-pack/
+          cp forge-*.jar server-pack/ || cp server.jar server-pack/
+          cp user_jvm_args.txt server-pack/ 2>/dev/null || true
+          cp run.sh server-pack/ 2>/dev/null || true
+          cp run.bat server-pack/ 2>/dev/null || true
+          cp -r libraries server-pack/
+          cp forge-*.jar server-pack/ || cp server.jar server-pack/
+          cp user_jvm_args.txt server-pack/ 2>/dev/null || true
+      
+      - name: Remove client-only mods
+        run: |
+          cd server-pack/mods
+          
+          # Remove client-only mods
+          rm -f *xaerominimap* *xaeroworldmap* *XaerosWorldMap* *XaerosMinimap* || true
+          rm -f *jade* *Jade* || true
+          rm -f *jei* *JustEnoughItems* || true
+          rm -f *emi* *EMI* || true
+          rm -f *light*overlay* *LightOverlay* || true
+          rm -f *mouse*tweaks* *MouseTweaks* || true
+          rm -f *appleskin* *AppleSkin* || true
+          rm -f *stylish*effects* *StylishEffects* || true
+          rm -f *configured* *Configured* || true
+          rm -f *embeddium* *Embeddium* || true
+          rm -f *oculus* *Oculus* || true
+          rm -f *entityculling* *EntityCulling* || true
+          rm -f *immediatelyfast* *ImmediatelyFast* || true
+          rm -f *freshanimations* *FreshAnimations* || true
+          rm -f *chat*heads* *ChatHeads* || true
+          rm -f *pickup*notifier* *PickupNotifier* || true
+          rm -f *sound*physics* || true
+          rm -f *dynamiclights* || true
+          rm -f *BetterThirdPerson* || true
+          rm -f *ShoulderSurfing* || true
+          rm -f *ItemPhysic* || true
+          rm -f *lightoverlay* || true
+          
+          cd ../..
+      
+      - name: Create startup scripts
+        run: |
+          # Linux startup script
+          cat > server-pack/start-server.sh << 'EOF'
+          #!/bin/bash
+          echo "Starting Minecraft modded server..."
+          
+          # Aikar's flags optimized for 8GB
+          java -Xms4G -Xmx8G \
+          -XX:+UseG1GC \
+          -XX:+ParallelRefProcEnabled \
+          -XX:MaxGCPauseMillis=200 \
+          -XX:+UnlockExperimentalVMOptions \
+          -XX:+DisableExplicitGC \
+          -XX:+AlwaysPreTouch \
+          -XX:G1NewSizePercent=30 \
+          -XX:G1MaxNewSizePercent=40 \
+          -XX:G1HeapRegionSize=8M \
+          -XX:G1ReservePercent=20 \
+          -XX:G1HeapWastePercent=5 \
+          -XX:G1MixedGCCountTarget=4 \
+          -XX:InitiatingHeapOccupancyPercent=15 \
+          -XX:G1MixedGCLiveThresholdPercent=90 \
+          -XX:G1RSetUpdatingPauseTimePercent=5 \
+          -XX:SurvivorRatio=32 \
+          -XX:+PerfDisableSharedMem \
+          -XX:MaxTenuringThreshold=1 \
+          -Dusing.aikars.flags=https://mcflags.emc.gs \
+          -Daikars.new.flags=true \
+          -jar forge-*.jar nogui
+          EOF
+          
+          chmod +x server-pack/start-server.sh
+          
+          # Windows startup script
+          cat > server-pack/start-server.bat << 'EOF'
+          @echo off
+          title Minecraft Modded Server
+          echo Starting server...
+          echo.
+          
+          REM Aikar's flags optimized for 8GB
+          java -Xms4G -Xmx8G ^
+          -XX:+UseG1GC ^
+          -XX:+ParallelRefProcEnabled ^
+          -XX:MaxGCPauseMillis=200 ^
+          -XX:+UnlockExperimentalVMOptions ^
+          -XX:+DisableExplicitGC ^
+          -XX:+AlwaysPreTouch ^
+          -XX:G1NewSizePercent=30 ^
+          -XX:G1MaxNewSizePercent=40 ^
+          -XX:G1HeapRegionSize=8M ^
+          -XX:G1ReservePercent=20 ^
+          -XX:G1HeapWastePercent=5 ^
+          -XX:G1MixedGCCountTarget=4 ^
+          -XX:InitiatingHeapOccupancyPercent=15 ^
+          -XX:G1MixedGCLiveThresholdPercent=90 ^
+          -XX:G1RSetUpdatingPauseTimePercent=5 ^
+          -XX:SurvivorRatio=32 ^
+          -XX:+PerfDisableSharedMem ^
+          -XX:MaxTenuringThreshold=1 ^
+          -Dusing.aikars.flags=https://mcflags.emc.gs ^
+          -Daikars.new.flags=true ^
+          -jar forge-1.20.1-47.4.12.jar nogui
+          
+          pause
+          EOF
+      
+      - name: Create README for server
+        run: |
+          cat > server-pack/README.md << 'EOF'
+          # Server Pack Installation
+          
+          ## Requirements
+          - Java 17 or higher
+          - 8GB RAM minimum (recommended)
+          - Ubuntu/Debian Linux or Windows Server
+          
+          ## Installation
+          
+          ### Linux
+          1. Extract this zip file
+          2. Run: `chmod +x start-server.sh`
+          3. First run: `./start-server.sh` (will create eula.txt and exit)
+          4. Edit `eula.txt` and set `eula=true`
+          5. Configure `server.properties` as needed
+          6. Run: `./start-server.sh`
+          
+          ### Windows
+          1. Extract this zip file
+          2. Double-click `start-server.bat`
+          3. Edit `eula.txt` and set `eula=true`
+          4. Configure `server.properties` as needed
+          5. Run `start-server.bat` again
+          
+          ## Pre-generation
+          
+          After first successful start:
+          1. Install Chunky mod (included)
+          2. Run: `/chunky world world`
+          3. Run: `/chunky radius 5000`
+          4. Run: `/chunky start`
+          5. Wait for completion (1-3 hours)
+          6. Stop server, remove Chunky mod, restart
+          
+          ## Port Forwarding
+          Default port: 25565 (configure in server.properties)
+          
+          ## Support
+          Report issues: https://github.com/${{ github.repository }}/issues
+          EOF
+      
+      - name: Create systemd service file
+        run: |
+          cat > server-pack/minecraft.service << 'EOF'
+          [Unit]
+          Description=Minecraft Modded Server
+          After=network.target
+          
+          [Service]
+          Type=simple
+          User=minecraft
+          WorkingDirectory=/home/minecraft/server
+          ExecStart=/home/minecraft/server/start-server.sh
+          Restart=on-failure
+          RestartSec=10
+          
+          [Install]
+          WantedBy=multi-user.target
+          EOF
+      
+      - name: Get version from tag
+        id: get_version
+        run: |
+          if [ "${{ github.ref_type }}" == "tag" ]; then
+            echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+          else
+            echo "VERSION=dev-$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Create server pack archive
+        run: |
+          cd server-pack
+          zip -r ../server-pack-${{ steps.get_version.outputs.VERSION }}.zip .
+          cd ..
+      
+      - name: Generate changelog
+        id: changelog
+        run: |
+          if [ "${{ github.ref_type }}" == "tag" ]; then
+            # Get commits since last tag
+            PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+            if [ -n "$PREV_TAG" ]; then
+              CHANGELOG=$(git log ${PREV_TAG}..HEAD --pretty=format:"- %s" --no-merges)
+            else
+              CHANGELOG=$(git log --pretty=format:"- %s" --no-merges -n 10)
+            fi
+          else
+            CHANGELOG="Development build from commit $(git rev-parse --short HEAD)"
+          fi
+          
+          CHANGELOG="${CHANGELOG//'%'/'%25'}"
+          CHANGELOG="${CHANGELOG//$'\n'/'%0A'}"
+          CHANGELOG="${CHANGELOG//$'\r'/'%0D'}"
+          
+          echo "CHANGELOG<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+      
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: server-pack-*.zip
+          body: |
+            ## Server Pack Release ${{ steps.get_version.outputs.VERSION }}
+            
+            ### Installation
+            1. Download `server-pack-${{ steps.get_version.outputs.VERSION }}.zip`
+            2. Extract to your server directory
+            3. Follow instructions in README.md
+            
+            ### Changes
+            ${{ steps.changelog.outputs.CHANGELOG }}
+            
+            ### Requirements
+            - Java 17+
+            - 8GB RAM minimum
+            - Forge 1.20.1-47.4.12
+            
+            ### Mods Included
+            See [pack.toml](https://github.com/${{ github.repository }}/blob/${{ github.ref_name }}/pack.toml) for full mod list
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Upload artifact (for non-tag builds)
+        if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: server-pack-${{ steps.get_version.outputs.VERSION }}
+          path: server-pack-*.zip
+          retention-days: 60
