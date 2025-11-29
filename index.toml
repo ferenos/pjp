@@ -307,6 +307,11 @@ hash = "02e3f47ff5a2fa074996387e14c81718e5c4df16dbe75ba1e1021157352f7815"
 metafile = true
 
 [[files]]
+file = "mods/deeperdarker.pw.toml"
+hash = "eb60f70cc84efa111a51c35311a44ae352b3b9c98ec7ba4e64595ae627e33006"
+metafile = true
+
+[[files]]
 file = "mods/domum-ornamentum.pw.toml"
 hash = "633b13c5912472982f53776c205117edbbf4b13b4de1975c37c42b6cf79624cf"
 metafile = true
@@ -403,7 +408,7 @@ metafile = true
 
 [[files]]
 file = "mods/geckolib.pw.toml"
-hash = "88f142bda6bfa6aff4f4d4e12b8ba7581aa40e3f163039a533f09dd6d634e093"
+hash = "1030e18f2e875dfdf39de82b823e1dfe6009f21f1aaad338137d3a90504e2f7e"
 metafile = true
 
 [[files]]
@@ -649,6 +654,11 @@ metafile = true
 [[files]]
 file = "mods/multi-piston.pw.toml"
 hash = "9895bf13e14fbb0b5284f7ad800b1fb3c7d4c373306231d5c6f95a282079fcbe"
+metafile = true
+
+[[files]]
+file = "mods/naturalist.pw.toml"
+hash = "6039fa77bfd0871c009092508bbaaed5f25947af425943fe3a2c8e6b32cd3102"
 metafile = true
 
 [[files]]
