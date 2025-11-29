@@ -1,0 +1,13 @@
+name = "Awesome Dungeon Nether"
+filename = "awesomedungeonnether-forge-1.20.1-3.1.1.jar"
+side = "server"
+
+[download]
+url = "https://cdn.modrinth.com/data/gW1httFP/versions/x2mdkok9/awesomedungeonnether-forge-1.20.1-3.1.1.jar"
+hash-format = "sha512"
+hash = "c5c436d0b4227c7d505908670d7f68773f8453c6d3d5258c52655bdb700724f046aaf25d6d2aa7022c5450a770e70220ec74d230a572561e5b36b27487587230"
+
+[update]
+[update.modrinth]
+mod-id = "gW1httFP"
+version = "x2mdkok9"

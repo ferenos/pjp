@@ -1,0 +1,13 @@
+name = "The Aether Multiplayer"
+filename = "The Aether Multiplayer-2.15.0.zip"
+side = "both"
+
+[download]
+hash-format = "sha1"
+hash = "346a76b38fcb16a86e832d784d811ba97ad78b43"
+mode = "metadata:curseforge"
+
+[update]
+[update.curseforge]
+file-id = 5220714
+project-id = 382818
