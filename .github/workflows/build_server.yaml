@@ -19,14 +19,15 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
+
+      - name: Install GO
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.25'
       
       - name: Install Packwiz
         run: |
-          wget https://github.com/packwiz/packwiz/releases/download/v0.20.14/packwiz-installer-bootstrap.jar -O packwiz-installer-bootstrap.jar
-          wget https://github.com/packwiz/packwiz/releases/latest/download/packwiz-linux-amd64.tar.gz
-          tar -xzf packwiz-linux-amd64.tar.gz
-          chmod +x packwiz
-          sudo mv packwiz /usr/local/bin/
+          go install github.com/packwiz/packwiz@latest
       
       - name: Download all mods
         run: |
