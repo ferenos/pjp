@@ -341,11 +341,7 @@ jobs:
       - name: Install Packwiz
         run: |
           go install github.com/packwiz/packwiz@latest
-      
-      - name: Download all mods
-        run: |
-          packwiz refresh
-
+    
       - name: Create Modrinth Export
         run: |
           packwiz export modrinth --output-file=pjpack.mrpack --include-optional
