@@ -344,7 +344,7 @@ jobs:
     
       - name: Create Modrinth Export
         run: |
-          packwiz export modrinth --output-file=pjpack.mrpack --include-optional
+          packwiz modrinth export --output-file=pjpack.mrpack --include-optional
 
       - name: Upload Modrinth Pack
         uses: actions/upload-artifact@v4
