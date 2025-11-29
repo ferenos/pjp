@@ -64,10 +64,6 @@ jobs:
         run: |
           go install github.com/packwiz/packwiz@latest
 
-      - name: Initialize Packwiz Pack
-        run: |
-          packwiz init --mcversion ${MC_VERSION} --loader forge
-
       
   build-server:
     needs: [pre-reqs, version-check]
