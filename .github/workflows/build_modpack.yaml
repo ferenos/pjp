@@ -15,6 +15,19 @@ env:
   SERVER_STARTUP_TIMEOUT: "120"
 
 jobs:
+  ensure-repo-owner-triggered-if-manual:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if repository owner triggered the workflow
+        run: |
+          if [ "${{ github.repository_owner }}" != "${{ github.actor }}" ]; then
+            echo "This workflow can only be manually triggered by the repository owner (${{
+            github.repository_owner }})."
+            exit 1
+          else
+            echo "Workflow manually triggered by repository owner. Continuing..."
+          fi
   version-check:
     runs-on: ubuntu-latest
     outputs:
