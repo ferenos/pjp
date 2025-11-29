@@ -1,0 +1,13 @@
+name = "Build Guide"
+filename = "BuildGuide-1.20-0.4.7.jar"
+side = "both"
+
+[download]
+hash-format = "sha1"
+hash = "ae4533941a803bc70808267788cdda825c79502c"
+mode = "metadata:curseforge"
+
+[update]
+[update.curseforge]
+file-id = 7125589
+project-id = 465690

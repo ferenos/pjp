@@ -1,0 +1,13 @@
+name = "The Tube"
+filename = "MTR-London-Underground-Addon-forge-2.2.4+1.20.1.jar"
+side = "both"
+
+[download]
+hash-format = "sha1"
+hash = "f1884dfbb50194950b39fc13387b7e34d5a340b5"
+mode = "metadata:curseforge"
+
+[update]
+[update.curseforge]
+file-id = 6832906
+project-id = 545686
