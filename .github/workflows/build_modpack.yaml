@@ -412,6 +412,11 @@ jobs:
       BUILD_VERSION: ${{ needs.version-check.outputs.version }}
     
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
       - name: Download server artifacts
         uses: actions/download-artifact@v4
         with:
@@ -462,20 +467,12 @@ jobs:
           echo "Generated changelog:"
           cat changelog.txt
       
-      - name: Get version
-        id: version
-        run: |
-          # Get version from pack.toml
-          VERSION=$(grep '^version = ' pack.toml | sed 's/version = "\(.*\)"/\1/' || echo "1.0.0")
-          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
-          echo "Using version: $VERSION"
-      
       - name: Create and push tag
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           
-          TAG="v${{ steps.version.outputs.VERSION }}"
+          TAG="v${{ env.BUILD_VERSION }}"
           
           # Check if tag already exists
           if git rev-parse "$TAG" >/dev/null 2>&1; then
@@ -494,11 +491,11 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          TAG="v${{ steps.version.outputs.VERSION }}"
+          TAG="v${{ env.BUILD_VERSION }}"
           
           # Create release notes
           cat > release-notes.md << 'EOF'
-          ## Modpack ${{ steps.version.outputs.VERSION }}
+          ## Modpack ${{ env.BUILD_VERSION }}
           
           ### Downloads
           - **Server Pack**: `server-pack-*.zip` - For dedicated servers
@@ -543,6 +540,6 @@ jobs:
           # Create release with all files in release-files directory
           gh release create "$TAG" \
             ./release-files/* \
-            --title "NutAndJam Modpack ${{ steps.version.outputs.VERSION }}" \
+            --title "NutAndJam Modpack ${{ env.BUILD_VERSION }}" \
             --notes-file release-notes.md \
             --latest
