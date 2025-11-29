@@ -341,6 +341,10 @@ jobs:
       - name: Install Packwiz
         run: |
           go install github.com/packwiz/packwiz@latest
+
+      - name: Copy from Manual to Packwiz Cache
+        run: |
+          cp -r manual_mods/* /home/runner/.cache/packwiz/cache/import
     
       - name: Create Modrinth Export
         run: |
