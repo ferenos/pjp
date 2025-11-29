@@ -70,6 +70,7 @@ jobs:
 
       
   build-server:
+    needs: [pre-reqs, version-check]
     runs-on: ubuntu-latest
     permissions:
       contents: write
