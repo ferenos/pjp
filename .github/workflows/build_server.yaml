@@ -43,7 +43,7 @@ jobs:
       
       - name: Download Forge Installer
         run: |
-            wget https://maven.minecraftforge.net/net/minecraftforge/forge/${MC_VERSION}-${FORGE_VERSION}/forge-${MC_VERSION}-${FORGE_VERSION}-installer.jar
+            wget -q https://maven.minecraftforge.net/net/minecraftforge/forge/${MC_VERSION}-${FORGE_VERSION}/forge-${MC_VERSION}-${FORGE_VERSION}-installer.jar
             java -jar forge-${MC_VERSION}-${FORGE_VERSION}-installer.jar --installServer
             # Accept EULA
             echo "eula=true" > eula.txt
