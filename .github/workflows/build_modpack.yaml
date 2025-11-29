@@ -17,21 +17,27 @@ env:
 jobs:
   version-check:
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.extract_version.outputs.VERSION }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Ensure Pack.toml version has bumped
+        id: extract_version
         run: |
           git fetch --tags
           LATEST_TAG=$(git describe --tags $(git rev-list --tags --max-count=1))
+          CURRENT_VERSION=$(grep '^version = ' pack.toml | sed 's/version = "\(.*\)"/\1/')
+          
+          echo "VERSION=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+          
           if [ -z "$LATEST_TAG" ]; then
             echo "No previous tags found, skipping version check."
             exit 0
           fi
           
           LATEST_VERSION=${LATEST_TAG#v}
-          CURRENT_VERSION=$(grep '^version = ' pack.toml | sed 's/version = "\(.*\)"/\1/')
           
           echo "Latest tagged version: $LATEST_VERSION"
           echo "Current pack.toml version: $CURRENT_VERSION"
@@ -43,9 +49,17 @@ jobs:
             echo "Version check passed: pack.toml version has been updated."
           fi
 
-  pre-reqs:
+  build-server:
+    needs: [version-check]
     runs-on: ubuntu-latest
-    steps:
+    permissions:
+      contents: write
+    outputs:
+      version: ${{ steps.get_version.outputs.VERSION }}
+    env:
+      BUILD_VERSION: ${{ needs.version-check.outputs.version }}
+    
+    steps:      
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -63,17 +77,7 @@ jobs:
       - name: Install Packwiz
         run: |
           go install github.com/packwiz/packwiz@latest
-
-      
-  build-server:
-    needs: [pre-reqs, version-check]
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    outputs:
-      version: ${{ steps.get_version.outputs.VERSION }}
     
-    steps:      
       - name: Download all mods
         run: |
           packwiz refresh
@@ -353,10 +357,23 @@ jobs:
           retention-days: 5
 
   build-client:
-    needs: build-server
+    needs: [version-check, build-server]
     runs-on: ubuntu-latest
-
+    env:
+      BUILD_VERSION: ${{ needs.version-check.outputs.version }}
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install GO
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.25'
+      
+      - name: Install Packwiz
+        run: |
+          go install github.com/packwiz/packwiz@latest
+
       - name: Copy from Manual to Packwiz Cache
         run: |
           mkdir -p /home/runner/.cache/packwiz/cache/import
@@ -369,15 +386,17 @@ jobs:
       - name: Upload Modrinth Pack
         uses: actions/upload-artifact@v4
         with:
-          name: NutAndJamPack-1.0.0.mrpack
-          path: NutAndJamPack-1.0.0.mrpack
+          name: NutAndJamPack-${{ env.BUILD_VERSION }}.mrpack
+          path: NutAndJamPack-${{ env.BUILD_VERSION }}.mrpack
           retention-days: 5
 
   release:
-    needs: [build-server, build-client]
+    needs: [version-check, build-server, build-client]
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    env:
+      BUILD_VERSION: ${{ needs.version-check.outputs.version }}
     
     steps:
       - name: Download server artifacts
@@ -389,7 +408,7 @@ jobs:
       - name: Download client artifacts
         uses: actions/download-artifact@v4
         with:
-          name: NutAndJamPack-1.0.0.mrpack
+          name: NutAndJamPack-${{ needs.version-check.outputs.version }}.mrpack
           path: ./artifacts/client
       
       - name: Prepare release files

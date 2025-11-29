@@ -1,18 +1,6 @@
 hash-format = "sha256"
 
 [[files]]
-file = ".github/workflows/build_client.yaml"
-hash = "84fd48f500341aa8225b97cf9ad0c7a10fb8ff5bd945e2bee9b6ae2990444d26"
-
-[[files]]
-file = ".github/workflows/build_server.yaml"
-hash = "be62d80fda0a5c6877947c22681fba3f5de4b31b2b546204585ee9d48cf8e51a"
-
-[[files]]
-file = ".github/workflows/publish_discord_message.yaml"
-hash = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-
-[[files]]
 file = "kubejs/server_scripts/mekanism_fixes.js"
 hash = "374e653621f7a97680f5cfce5d9865a55669544afa66ca9ec0fe52abe4c17a03"
 
@@ -827,14 +815,6 @@ hash = "15f5872ee75d21be2e6cbd25669e423a2a764312562e5cdfdc4e34af160dc6d3"
 metafile = true
 
 [[files]]
-file = "server/forge-1.20.1-47.4.10-installer.jar"
-hash = "1912760b4cb6b803d8a826de603c9076b1da71ec2765e9a1f8c1ca78f65278e3"
-
-[[files]]
 file = "shaderpacks/complementary-reimagined.pw.toml"
 hash = "531a8d239c952428d9a633ff99cb03461656ada28decbe2e1ef19f60f7fd5726"
 metafile = true
-
-[[files]]
-file = "test-build-server.ps1"
-hash = "7dbe41bec4bd18c3fae4d7afe15394be750c2ea7ea40b48f06512498de7ae40e"
