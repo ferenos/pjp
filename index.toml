@@ -1,8 +1,20 @@
 hash-format = "sha256"
 
 [[files]]
+file = "debug/forge-1.20.1-47.4.10-installer.jar"
+hash = "1912760b4cb6b803d8a826de603c9076b1da71ec2765e9a1f8c1ca78f65278e3"
+
+[[files]]
 file = "kubejs/server_scripts/mekanism_fixes.js"
 hash = "374e653621f7a97680f5cfce5d9865a55669544afa66ca9ec0fe52abe4c17a03"
+
+[[files]]
+file = "manual_mods/FreshAnimations_v1.10.2.zip"
+hash = "72599c99251b2dd8543795c0d566da5c0e39f79fd5d002e6cba0e7581e77acfa"
+
+[[files]]
+file = "manual_mods/entityculling-forge-1.9.3-mc1.20.1.jar"
+hash = "c0160d378f5f00da72e7235a62caa615a5274a2346541101311b24442366ab71"
 
 [[files]]
 file = "mods/ad-astra-giselle-addon.pw.toml"
@@ -520,8 +532,23 @@ hash = "8fb0ae9433533a1d24f9b738d6fa27f1d3091b10fd60fd9b0944b48901993c7e"
 metafile = true
 
 [[files]]
+file = "mods/mekanism-additions.pw.toml"
+hash = "b70b0220d902edd85ff5fff43ba6c3a3aaa2fe05f1b420e62beb68a028b7c38e"
+metafile = true
+
+[[files]]
+file = "mods/mekanism-generators.pw.toml"
+hash = "ff3c572cc8a57df72f4a9ee7aa06388bec703a7f9bf08068a62fe3221efe3e80"
+metafile = true
+
+[[files]]
+file = "mods/mekanism-tools.pw.toml"
+hash = "2c11bde21d3a730ba706278c12339f4a8bbe2fac46b7e110f409a18c408a3537"
+metafile = true
+
+[[files]]
 file = "mods/mekanism.pw.toml"
-hash = "7c411a566d022680769ddb8323984fff292ddeb35e7d8fcfe2cc41b9885d9557"
+hash = "426fd37ec95797af16797632e70c63436ca12719c0adb16ffca931970a411ee2"
 metafile = true
 
 [[files]]
