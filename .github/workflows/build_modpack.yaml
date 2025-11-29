@@ -354,7 +354,7 @@ jobs:
           retention-days: 5
 
   release:
-    needs: build-server
+    needs: [build-server, build-client]
     runs-on: ubuntu-latest
     permissions:
       contents: write
