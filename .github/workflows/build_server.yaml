@@ -313,7 +313,7 @@ jobs:
         with:
           name: server-pack-${{ steps.get_version.outputs.VERSION }}
           path: server-pack-*.zip
-          retention-days: 60
+          retention-days: 5
 
   release:
     needs: build-server
