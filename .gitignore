@@ -6,3 +6,6 @@ mods/*.zip
 
 # Exclude /debug/ directory
 debug/
+
+# Docker build test output
+build-output/
