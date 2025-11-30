@@ -454,7 +454,7 @@ metafile = true
 
 [[files]]
 file = "mods/entityculling.pw.toml"
-hash = "6843022335e0f27b000ff90bf6641c5299594f5ca06331abf298b5122c6b9bcc"
+hash = "7b32032b0892b53e1e5daf5410b78b4d98b7bdcbe2184f1d643098de36674865"
 metafile = true
 
 [[files]]
@@ -1200,11 +1200,6 @@ metafile = true
 [[files]]
 file = "mods/zeta.pw.toml"
 hash = "557d160e4a3d856c6bbe36c39ee7c6cd42824363690b61d5f23bbac153c8edbc"
-metafile = true
-
-[[files]]
-file = "resourcepacks/fresh-animations.pw.toml"
-hash = "15f5872ee75d21be2e6cbd25669e423a2a764312562e5cdfdc4e34af160dc6d3"
 metafile = true
 
 [[files]]
