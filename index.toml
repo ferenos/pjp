@@ -6,7 +6,7 @@ hash = "1912760b4cb6b803d8a826de603c9076b1da71ec2765e9a1f8c1ca78f65278e3"
 
 [[files]]
 file = "discord/post_release_to_discord.py"
-hash = "1905f09610733fa4c0187858e99f2e01e8e16d5e5d0860c353dc4abcf9021ea0"
+hash = "ef702961fe88bf28ad317e2b36bd801ac5d237f4ccc548eceaee0b82456282f1"
 
 [[files]]
 file = "kubejs/server_scripts/mekanism_fixes.js"
@@ -1114,6 +1114,10 @@ metafile = true
 file = "resourcepacks/fresh-animations.pw.toml"
 hash = "15f5872ee75d21be2e6cbd25669e423a2a764312562e5cdfdc4e34af160dc6d3"
 metafile = true
+
+[[files]]
+file = "scripts/mod_changelog.sh"
+hash = "a921d9c7aa22302ddf885a40468a1d54855ac16a807634820fcfc425ec1182f7"
 
 [[files]]
 file = "setup/packwiz-installer-bootstrap.jar"
