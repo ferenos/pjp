@@ -81,36 +81,27 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-
-      - name: Install GO
-        uses: actions/setup-go@v4
-        with:
-          go-version: '1.25'
-      
-      - name: Install Packwiz
-        run: |
-          go install github.com/packwiz/packwiz@latest
-    
-      - name: Download all mods
-        run: |
-          packwiz refresh
       
       - name: Download Forge Installer
         run: |
-            wget -q https://maven.minecraftforge.net/net/minecraftforge/forge/${MC_VERSION}-${FORGE_VERSION}/forge-${MC_VERSION}-${FORGE_VERSION}-installer.jar
-            java -jar forge-${MC_VERSION}-${FORGE_VERSION}-installer.jar --installServer
-            # Accept EULA
-            echo "eula=true" > eula.txt
+          wget -q https://maven.minecraftforge.net/net/minecraftforge/forge/${MC_VERSION}-${FORGE_VERSION}/forge-${MC_VERSION}-${FORGE_VERSION}-installer.jar
+          java -jar forge-${MC_VERSION}-${FORGE_VERSION}-installer.jar --installServer
 
       - name: Create server directory structure
         run: |
-          # List Current structure for debugging
-          ls -la
-
           mkdir -p server-pack
           
-          cp -r mods server-pack/
-
+          # Copy Forge server files
+          cp -r libraries server-pack/
+          cp forge-*.jar server-pack/ || cp server.jar server-pack/
+          
+          # Copy packwiz files
+          cp pack.toml server-pack/
+          cp index.toml server-pack/
+          cp setup/packwiz-installer-bootstrap.jar server-pack/
+          cp setup/packwiz-installer.jar server-pack/
+          
+          # Copy server configs (kubejs, config, etc)
           if [ -d "config" ]; then
             cp -r config server-pack/
           fi
@@ -122,56 +113,20 @@ jobs:
           if [ -d "defaultconfigs" ]; then
             cp -r defaultconfigs server-pack/
           fi
-          
-          cp run.sh server-pack/ 2>/dev/null || true
-          cp run.bat server-pack/ 2>/dev/null || true
-          cp -r libraries server-pack/
-          cp forge-*.jar server-pack/ || cp server.jar server-pack/
-          cp user_jvm_args.txt server-pack/ 2>/dev/null || true
-          cp run.sh server-pack/ 2>/dev/null || true
-          cp run.bat server-pack/ 2>/dev/null || true
-          cp -r libraries server-pack/
-          cp forge-*.jar server-pack/ || cp server.jar server-pack/
-          cp user_jvm_args.txt server-pack/ 2>/dev/null || true
-      
-      - name: Remove client-only mods
-        run: |
-          cd server-pack/mods
-          
-          # Remove client-only mods
-          rm -f *xaerominimap* *xaeroworldmap* *XaerosWorldMap* *XaerosMinimap* || true
-          rm -f *jade* *Jade* || true
-          rm -f *jei* *JustEnoughItems* || true
-          rm -f *emi* *EMI* || true
-          rm -f *light*overlay* *LightOverlay* || true
-          rm -f *mouse*tweaks* *MouseTweaks* || true
-          rm -f *appleskin* *AppleSkin* || true
-          rm -f *stylish*effects* *StylishEffects* || true
-          rm -f *configured* *Configured* || true
-          rm -f *embeddium* *Embeddium* || true
-          rm -f *oculus* *Oculus* || true
-          rm -f *entityculling* *EntityCulling* || true
-          rm -f *immediatelyfast* *ImmediatelyFast* || true
-          rm -f *freshanimations* *FreshAnimations* || true
-          rm -f *chat*heads* *ChatHeads* || true
-          rm -f *pickup*notifier* *PickupNotifier* || true
-          rm -f *sound*physics* || true
-          rm -f *dynamiclights* || true
-          rm -f *BetterThirdPerson* || true
-          rm -f *ShoulderSurfing* || true
-          rm -f *ItemPhysic* || true
-          rm -f *lightoverlay* || true
-          
-          cd ../..
       
       - name: Create startup scripts
         run: |
           # Linux startup script
           cat > server-pack/start-server.sh << 'EOF'
           #!/bin/bash
-          echo "Starting Minecraft modded server..."
+          echo "Starting Minecraft modded server with Packwiz..."
+          echo "This will download all mods automatically on first run."
+          echo ""
           
-          # Aikar's flags optimized for 8GB
+          # First run packwiz-installer-bootstrap to download mods
+          java -jar packwiz-installer-bootstrap.jar -s server
+          
+          # Then start the server with Aikar's flags
           java -Xms4G -Xmx8G \
           -XX:+UseG1GC \
           -XX:+ParallelRefProcEnabled \
@@ -202,10 +157,14 @@ jobs:
           cat > server-pack/start-server.bat << 'EOF'
           @echo off
           title Minecraft Modded Server
-          echo Starting server...
+          echo Starting server with Packwiz...
+          echo This will download all mods automatically on first run.
           echo.
           
-          REM Aikar's flags optimized for 8GB
+          REM First run packwiz-installer-bootstrap to download mods
+          java -jar packwiz-installer-bootstrap.jar -s server
+          
+          REM Then start the server
           java -Xms4G -Xmx8G ^
           -XX:+UseG1GC ^
           -XX:+ParallelRefProcEnabled ^
@@ -237,40 +196,84 @@ jobs:
           cat > server-pack/README.md << 'EOF'
           # Server Pack Installation
           
+          ## What's Included
+          This server pack uses **Packwiz Bootstrap** to automatically download mods on first run.
+          
+          Included files:
+          - Forge server (libraries + forge jar)
+          - `pack.toml` and `index.toml` - Packwiz modpack definitions
+          - `packwiz-installer-bootstrap.jar` - Auto-downloads mods from pack.toml
+          - `packwiz-installer.jar` - Mod installer
+          - Server configs (kubejs, config files)
+          - Start scripts (Linux & Windows)
+          
           ## Requirements
           - Java 17 or higher
           - 8GB RAM minimum (recommended)
           - Ubuntu/Debian Linux or Windows Server
           
-          ## Installation
+          ## Quick Start
           
           ### Linux
-          1. Extract this zip file
-          2. Run: `chmod +x start-server.sh`
-          3. First run: `./start-server.sh` (will create eula.txt and exit)
-          4. Edit `eula.txt` and set `eula=true`
-          5. Configure `server.properties` as needed
-          6. Run: `./start-server.sh`
+          ```bash
+          # Extract the zip
+          unzip server-pack-*.zip
+          cd server-pack
+          
+          # Run the server (mods will auto-download on first run)
+          ./start-server.sh
+          
+          # On first run, accept the EULA
+          # Edit eula.txt and set: eula=true
+          
+          # Start again
+          ./start-server.sh
+          ```
           
           ### Windows
-          1. Extract this zip file
+          1. Extract the zip file
           2. Double-click `start-server.bat`
-          3. Edit `eula.txt` and set `eula=true`
-          4. Configure `server.properties` as needed
-          5. Run `start-server.bat` again
+          3. Wait for mods to download automatically
+          4. Server will create `eula.txt` and stop
+          5. Edit `eula.txt` and set `eula=true`
+          6. Run `start-server.bat` again
           
-          ## Pre-generation
+          ## How It Works
           
-          After first successful start:
-          1. Install Chunky mod (included)
+          The packwiz-installer-bootstrap will:
+          1. Read `pack.toml` and `index.toml`
+          2. Download all mods from Modrinth/CurseForge automatically
+          3. Place them in the `mods/` folder
+          4. Keep mods updated if you update the pack files
+          
+          ## Configuration
+          
+          - **Memory**: Edit the start scripts to adjust `-Xms4G -Xmx8G` values
+          - **Server settings**: Edit `server.properties` after first run
+          - **Port**: Default 25565 (change in `server.properties`)
+          
+          ## Updating the Modpack
+          
+          To update to a new version:
+          1. Download the new server pack
+          2. Replace `pack.toml` and `index.toml` 
+          3. Restart server - packwiz will update mods automatically
+          
+          ## Manual Mod Download (Optional)
+          
+          If you prefer to pre-download mods instead of auto-download:
+          ```bash
+          java -jar packwiz-installer.jar -s server
+          ```
+          
+          ## World Pre-generation (Recommended)
+          
+          For better performance:
+          1. Start server normally
           2. Run: `/chunky world world`
           3. Run: `/chunky radius 5000`
           4. Run: `/chunky start`
-          5. Wait for completion (1-3 hours)
-          6. Stop server, remove Chunky mod, restart
-          
-          ## Port Forwarding
-          Default port: 25565 (configure in server.properties)
+          5. Wait 1-3 hours for completion
           
           ## Support
           Report issues: https://github.com/${{ github.repository }}/issues
@@ -514,23 +517,24 @@ jobs:
           - **Java**: 17 or higher
           - **RAM**: 4GB minimum (8GB recommended)
           
-          ### Installation
-          
-          #### Client (Prism Launcher)
-          1. Download `NutAndJamPack-*.mrpack`
-          2. Open Modrinth Launcher
-          3. Click "Add Instance" → "Import from zip"
-          4. Select the downloaded `.mrpack` file
-          
-          #### Server
-          1. Download `server-pack-*.zip`
-          2. Extract to your server directory
-          3. Run `start-server.sh` (Linux) or `start-server.bat` (Windows)
-          4. Accept EULA by editing `eula.txt`
-          5. Configure `server.properties`
-          6. Restart server
-          
-          ### Report Issues
+            ### Installation
+            
+            #### Client (Prism Launcher)
+            1. Download `NutAndJamPack-*.mrpack`
+            2. Open Modrinth Launcher
+            3. Click "Add Instance" → "Import from zip"
+            4. Select the downloaded `.mrpack` file
+            
+            #### Server
+            1. Download `server-pack-*.zip`
+            2. Extract to your server directory
+            3. Run `start-server.sh` (Linux) or `start-server.bat` (Windows)
+            4. Mods will download automatically on first run
+            5. Accept EULA by editing `eula.txt` and setting `eula=true`
+            6. Configure `server.properties` as needed
+            7. Restart server
+            
+            **Note**: The server uses Packwiz Bootstrap to automatically download all mods from the modpack definition. No manual mod downloads required!          ### Report Issues
           Found a bug? [Open an issue](https://github.com/${{ github.repository }}/issues)
           EOF
           
@@ -543,3 +547,26 @@ jobs:
             --title "NutAndJam Modpack ${{ env.BUILD_VERSION }}" \
             --notes-file release-notes.md \
             --latest
+
+  publish-release-message:
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+
+      #Only Checkout python related steps
+      - name: Checkout notification script only
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            post_release_to_discord.py
+          sparse-checkout-cone-mode: false
+      
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          pip install requests
