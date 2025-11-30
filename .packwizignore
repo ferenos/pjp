@@ -4,3 +4,5 @@
 # Exclude README
 /README.md
 /.github/
+
+*.py
