@@ -1,14 +1,6 @@
 hash-format = "sha256"
 
 [[files]]
-file = "debug/commands.txt"
-hash = "e5d750cd1ed33b0c105299dfb34090a16415f4d7a63b2d4d8360d0600d99a50f"
-
-[[files]]
-file = "debug/forge-1.20.1-47.4.10-installer.jar"
-hash = "1912760b4cb6b803d8a826de603c9076b1da71ec2765e9a1f8c1ca78f65278e3"
-
-[[files]]
 file = "kubejs/server_scripts/mekanism_fixes.js"
 hash = "374e653621f7a97680f5cfce5d9865a55669544afa66ca9ec0fe52abe4c17a03"
 
