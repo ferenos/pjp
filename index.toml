@@ -976,6 +976,11 @@ hash = "fde3d3b1607636100e382dce1bba80ab4608ebfa1ef888a37b86bc8c7dcbafe5"
 metafile = true
 
 [[files]]
+file = "mods/the-aether.pw.toml"
+hash = "82c51fd501da0f0e6f950bbe8a39c038042f62913435120941f5cafbda4faaaa"
+metafile = true
+
+[[files]]
 file = "mods/the-tube.pw.toml"
 hash = "20395ea5ff447ffa4539019d73efd596059e26f42007d056cbc5002a6c5a375c"
 metafile = true
@@ -1116,11 +1121,14 @@ hash = "15f5872ee75d21be2e6cbd25669e423a2a764312562e5cdfdc4e34af160dc6d3"
 metafile = true
 
 [[files]]
-file = "shaderpacks/complementary-reimagined.pw.toml"
-hash = "531a8d239c952428d9a633ff99cb03461656ada28decbe2e1ef19f60f7fd5726"
-metafile = true
+file = "setup/packwiz-installer-bootstrap.jar"
+hash = "a8fbb24dc604278e97f4688e82d3d91a318b98efc08d5dbfcbcbcab6443d116c"
 
 [[files]]
-file = "the-aether.pw.toml"
-hash = "82c51fd501da0f0e6f950bbe8a39c038042f62913435120941f5cafbda4faaaa"
+file = "setup/packwiz-installer.jar"
+hash = "c9f646908d340d84773948a9a7d98bc1dae250d35e1016dc6e2b8459760b5598"
+
+[[files]]
+file = "shaderpacks/complementary-reimagined.pw.toml"
+hash = "531a8d239c952428d9a633ff99cb03461656ada28decbe2e1ef19f60f7fd5726"
 metafile = true

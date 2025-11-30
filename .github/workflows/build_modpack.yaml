@@ -549,18 +549,46 @@ jobs:
             --latest
 
   publish-release-message:
-    needs: release
+    needs: [version-check, release]
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      BUILD_VERSION: ${{ needs.version-check.outputs.version }}
     steps:
 
-      #Only Checkout python related steps
-      - name: Checkout notification script only
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          sparse-checkout: |
-            post_release_to_discord.py
-          sparse-checkout-cone-mode: false
+          fetch-depth: 0
       
+      - name: Generate mod changelog
+        id: mod_changelog
+        run: |
+          chmod +x scripts/mod_changelog.sh
+          
+          # Get previous tag
+          PREV_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+          CURRENT_TAG="v${{ env.BUILD_VERSION }}"
+          
+          if [ -z "$PREV_TAG" ]; then
+            echo "No previous tag found, using initial release message"
+            echo "CHANGELOG=Initial release of NutAndJam Modpack!" >> $GITHUB_OUTPUT
+          else
+            # Run the changelog script
+            export GITHUB_REPOSITORY="${{ github.repository }}"
+            ./scripts/mod_changelog.sh "$PREV_TAG" "$CURRENT_TAG"
+            
+            # Read the generated changelog
+            CHANGELOG_CONTENT=$(cat CHANGELOG-${CURRENT_TAG}.md)
+            
+            # Save to output (escaping for multiline)
+            {
+              echo 'CHANGELOG<<EOF'
+              echo "$CHANGELOG_CONTENT"
+              echo 'EOF'
+            } >> $GITHUB_OUTPUT
+          fi
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -570,3 +598,15 @@ jobs:
       - name: Install dependencies
         run: |
           pip install requests
+      
+      - name: Post to Discord
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          RELEASE_TAG: "v${{ env.BUILD_VERSION }}"
+          RELEASE_NAME: "NutAndJam Modpack ${{ env.BUILD_VERSION }}"
+          RELEASE_URL: "${{ github.server_url }}/${{ github.repository }}/releases/tag/v${{ env.BUILD_VERSION }}"
+          RELEASE_BODY: "${{ steps.mod_changelog.outputs.CHANGELOG }}"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DISCORD_WEBHOOK_USERNAME: "NutAndJam Modpack"
+        run: |
+          python discord/post_release_to_discord.py
