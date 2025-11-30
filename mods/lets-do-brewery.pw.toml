@@ -1,0 +1,13 @@
+name = "Legacy: [Let's Do] Brewery"
+filename = "letsdo-brewery-forge-1.1.9.jar"
+side = "both"
+
+[download]
+url = "https://cdn.modrinth.com/data/cV5LQXKx/versions/vqYszE4F/letsdo-brewery-forge-1.1.9.jar"
+hash-format = "sha512"
+hash = "a567acd7a5991ed6c6fa58a205cca81d230c21fd9d9ad553aa6d17f29e5a2d012d386cd541dd65b5585c025c14e5686a9a871761b85082131fadef6f8705c626"
+
+[update]
+[update.modrinth]
+mod-id = "cV5LQXKx"
+version = "vqYszE4F"
