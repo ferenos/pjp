@@ -1,0 +1,13 @@
+name = "Hunter'sReturn"
+filename = "hunters_return-1.20.1-11.8.0.jar"
+side = "both"
+
+[download]
+hash-format = "sha1"
+hash = "11182092e5c96770f09f8c2b4fd70fdf9c00bee1"
+mode = "metadata:curseforge"
+
+[update]
+[update.curseforge]
+file-id = 6941296
+project-id = 318857
