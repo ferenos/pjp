@@ -1208,10 +1208,6 @@ hash = "15f5872ee75d21be2e6cbd25669e423a2a764312562e5cdfdc4e34af160dc6d3"
 metafile = true
 
 [[files]]
-file = "scripts/mod_changelog.sh"
-hash = "a921d9c7aa22302ddf885a40468a1d54855ac16a807634820fcfc425ec1182f7"
-
-[[files]]
 file = "setup/packwiz-installer-bootstrap.jar"
 hash = "a8fbb24dc604278e97f4688e82d3d91a318b98efc08d5dbfcbcbcab6443d116c"
 

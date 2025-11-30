@@ -14,9 +14,11 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Install packwiz-installer
-RUN mkdir -p /opt/packwiz && \
-    curl -L -o /opt/packwiz/packwiz-installer-bootstrap.jar \
-    https://github.com/packwiz/packwiz-installer-bootstrap/releases/latest/download/packwiz-installer-bootstrap.jar
+RUN mkdir -p /opt/packwiz
+
+# Copy packwiz installer jars from local setup directory
+COPY setup/packwiz-installer-bootstrap.jar /opt/packwiz/
+COPY setup/packwiz-installer.jar /opt/packwiz/
 
 # Create server directory
 WORKDIR /server

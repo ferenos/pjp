@@ -7,3 +7,8 @@
 
 *.py
 /debug/
+docker/
+
+.dockerignore
+docker-compose.yml
+scripts/

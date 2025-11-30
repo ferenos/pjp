@@ -9,3 +9,4 @@ debug/
 
 # Docker build test output
 build-output/
+docker/

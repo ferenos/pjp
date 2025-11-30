@@ -1,15 +1,24 @@
 # Dockerfile for testing client modpack build
-FROM openjdk:17-slim
+FROM ubuntu:24.04
+
+ENV DEBIAN_FRONTEND=noninteractive
 
 # Install required tools
 RUN apt-get update && \
-    apt-get install -y curl git && \
+    apt-get install -y \
+    openjdk-17-jre-headless \
+    curl \
+    git \
+    wget \
+    golang-go && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
 # Install packwiz
-RUN curl -L -o /usr/local/bin/packwiz https://github.com/packwiz/packwiz/releases/latest/download/packwiz-linux && \
-    chmod +x /usr/local/bin/packwiz
+RUN go install github.com/packwiz/packwiz@latest
+
+# Add Go bin to PATH
+ENV PATH="/root/go/bin:${PATH}"
 
 # Set working directory
 WORKDIR /modpack
