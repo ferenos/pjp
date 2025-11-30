@@ -1,12 +1,12 @@
 hash-format = "sha256"
 
 [[files]]
-file = "debug/forge-1.20.1-47.4.10-installer.jar"
-hash = "1912760b4cb6b803d8a826de603c9076b1da71ec2765e9a1f8c1ca78f65278e3"
+file = "debug/commands.txt"
+hash = "e5d750cd1ed33b0c105299dfb34090a16415f4d7a63b2d4d8360d0600d99a50f"
 
 [[files]]
-file = "discord/post_release_to_discord.py"
-hash = "ef702961fe88bf28ad317e2b36bd801ac5d237f4ccc548eceaee0b82456282f1"
+file = "debug/forge-1.20.1-47.4.10-installer.jar"
+hash = "1912760b4cb6b803d8a826de603c9076b1da71ec2765e9a1f8c1ca78f65278e3"
 
 [[files]]
 file = "kubejs/server_scripts/mekanism_fixes.js"
