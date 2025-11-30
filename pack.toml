@@ -1,6 +1,6 @@
-name = "NutAndJamPack"
+name = "NutAndJamPack 1.0.4"
 author = "PJ"
-version = "1.0.3"
+version = "1.0.4"
 pack-format = "packwiz:1.1.0"
 
 [index]
