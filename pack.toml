@@ -1,12 +1,12 @@
 name = "NutAndJamPack"
 author = "PJ"
-version = "1.0.5a"
+version = "1.0.5b"
 pack-format = "packwiz:1.1.0"
 
 [index]
 file = "index.toml"
 hash-format = "sha256"
-hash = "8da67eb32871fc38b4d7c5ea74406ba36ae07e5e4041c1d828faa75383a0a647"
+hash = "17847e000046050c3dc9e7332001c3f2de80ec8b58c69fbc3435cfef5945d5f0"
 
 [versions]
 forge = "47.4.12"
