@@ -1,0 +1,6 @@
+# Add build output directory to .gitignore
+build-output/
+
+# Docker build artifacts
+*.mrpack
+!NutAndJamPack*.mrpack
